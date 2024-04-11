@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.constent.ProductCategory;
 import com.example.demo.dao.ProductDao;
+import com.example.demo.dto.ProductQueryParams;
 import com.example.demo.dto.ProductRequest;
 import com.example.demo.model.Product;
 
@@ -25,9 +26,9 @@ public class ProductServiceImpl implements ProductService{
 
 	
 	@Override
-	public List<Product> getProducts(ProductCategory category, String search) {
+	public List<Product> getProducts(ProductQueryParams productQueryParams) {
 		
-		return productDao.getProducts(category, search);
+		return productDao.getProducts(productQueryParams);
 	}
 
 

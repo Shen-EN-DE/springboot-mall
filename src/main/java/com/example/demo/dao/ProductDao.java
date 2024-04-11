@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.constent.ProductCategory;
+import com.example.demo.dto.ProductQueryParams;
 import com.example.demo.dto.ProductRequest;
 import com.example.demo.model.Product;
 
@@ -12,7 +13,7 @@ import com.example.demo.model.Product;
 public interface ProductDao {
 	Product getProductById(Integer productId);
 	
-	List<Product> getProducts(ProductCategory category, String search);
+	List<Product> getProducts(ProductQueryParams productQueryParams);
 	
 	Integer createProduct(ProductRequest productRequest);
 	

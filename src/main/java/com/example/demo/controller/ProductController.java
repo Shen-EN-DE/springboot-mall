@@ -20,6 +20,7 @@ import com.example.demo.dto.ProductQueryParams;
 import com.example.demo.dto.ProductRequest;
 import com.example.demo.model.Product;
 import com.example.demo.service.ProductService;
+import com.example.demo.util.Page;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -33,7 +34,7 @@ public class ProductController {
 	private ProductService productService;
 	
 	@GetMapping("/products")
-	public ResponseEntity<List<Product>> getProduct(
+	public ResponseEntity<Page<Product>> getProduct(
 			@RequestParam(required = false) ProductCategory category,
 			@RequestParam(required = false) String search,
 			
@@ -51,9 +52,20 @@ public class ProductController {
 		productQueryParams.setLimit(limit);
 		productQueryParams.setOffset(offset);
 		
+		
+		//取得product list
 		List<Product> productList = productService.getProducts(productQueryParams);
-			
-		return ResponseEntity.status(HttpStatus.OK).body(productList);
+		
+		//取得product總數   //因為前端如果想找某些類別種類的總參數，total不一樣，因此要用前端傳的資訊提供
+		Integer total = productService.countProduct(productQueryParams); 
+		
+		Page<Product> page = new Page<>();
+		page.setLimit(limit);
+		page.setOffset(offset);
+		page.setTotal(total);
+		page.setResult(productList);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(page);
 		
 	}
 	

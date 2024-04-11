@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.constent.ProductCategory;
 import com.example.demo.dao.ProductDao;
 import com.example.demo.dto.ProductRequest;
 import com.example.demo.model.Product;
@@ -19,6 +22,14 @@ public class ProductServiceImpl implements ProductService{
 		return productDao.getProductById(productId);
 		
 	}
+
+	
+	@Override
+	public List<Product> getProducts(ProductCategory category, String search) {
+		
+		return productDao.getProducts(category, search);
+	}
+
 
 	@Override
 	public Integer createProduct(ProductRequest productRequest) {

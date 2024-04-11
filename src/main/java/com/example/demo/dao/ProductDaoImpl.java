@@ -1,5 +1,6 @@
 package com.example.demo.dao;
 
+import java.security.PublicKey;
 import java.security.spec.NamedParameterSpec;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,16 +8,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 
+import com.example.demo.constent.ProductCategory;
 import com.example.demo.dto.ProductRequest;
 import com.example.demo.model.Product;
 import com.example.demo.rowmapper.ProductRowMapper;
+import com.example.demo.service.ProductService;
 
 @Component
 public class ProductDaoImpl implements ProductDao {
@@ -41,6 +47,31 @@ public class ProductDaoImpl implements ProductDao {
 			return null;
 		}
 	}
+
+	@Override
+	public List<Product> getProducts(ProductCategory category, String search) {
+		
+		String sql = "SELECT product_id, product_name, category, image_url, price, stock, description, created_date, last_modified_date "
+				+ "FROM product "
+				+ "WHERE 1=1";
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		if(category != null) {
+			sql = sql + " AND category = :category";
+			map.put("category", category.name());
+		}
+		
+		if(search != null) {
+			sql = sql + " AND product_name LIKE :search";
+			map.put("search", "%" + search + "%");
+		}
+		
+		List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
+	  
+		return productList;
+	}
+
 
 	@Override
 	public Integer createProduct(ProductRequest productRequest) {
@@ -100,7 +131,6 @@ public class ProductDaoImpl implements ProductDao {
 		map.put("productId", productId);
 		
 		namedParameterJdbcTemplate.update(sql, map);
-		
 		
 	}
 	

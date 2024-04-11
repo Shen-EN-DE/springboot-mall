@@ -1,7 +1,10 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
+import com.example.demo.constent.ProductCategory;
 import com.example.demo.dto.ProductRequest;
 import com.example.demo.model.Product;
 
@@ -9,6 +12,8 @@ import com.example.demo.model.Product;
 public interface ProductService {
 	
 	Product getProductById(Integer productId);
+
+	List<Product> getProducts(ProductCategory category, String search);
 	
 	Integer createProduct(ProductRequest productRequest);
 	
@@ -16,4 +21,5 @@ public interface ProductService {
 	
 	void deleteProductById(Integer productId);
 
+	
 }

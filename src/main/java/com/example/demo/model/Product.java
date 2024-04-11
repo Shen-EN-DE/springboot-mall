@@ -7,7 +7,7 @@ import com.example.demo.constent.ProductCategory;
 public class Product {
 	
 	private String productName;
-	private ProductCategory categery;
+	private ProductCategory category;
 	private Integer productId;
 	private String imageUrl;
 	private Integer price;
@@ -23,11 +23,11 @@ public class Product {
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-	public ProductCategory getCategery() {
-		return categery;
+	public ProductCategory getCategory() {
+		return category;
 	}
-	public void setCategery(ProductCategory categery) {
-		this.categery = categery;
+	public void setCategery(ProductCategory category) {
+		this.category = category;
 	}
 	public Integer getProductId() {
 		return productId;

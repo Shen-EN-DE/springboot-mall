@@ -2,10 +2,12 @@ package com.example.demo.model;
 
 import java.util.Date;
 
+import com.example.demo.constent.ProductCategory;
+
 public class Product {
 	
 	private String productName;
-	private String categery;
+	private ProductCategory categery;
 	private Integer productId;
 	private String imageUrl;
 	private Integer price;
@@ -21,10 +23,10 @@ public class Product {
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-	public String getCategery() {
+	public ProductCategory getCategery() {
 		return categery;
 	}
-	public void setCategery(String categery) {
+	public void setCategery(ProductCategory categery) {
 		this.categery = categery;
 	}
 	public Integer getProductId() {

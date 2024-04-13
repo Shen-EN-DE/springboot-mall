@@ -6,9 +6,13 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.UserLoginRequest;
 import com.example.demo.dto.UserRegisterRequest;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -20,7 +24,7 @@ public class UserController {
 	private UserService userService;
 	
 	@PostMapping("/users/register")
-	public ResponseEntity<User> register(@RequestBody UserRegisterRequest userRegisterRequest) {
+	public ResponseEntity<User> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
 		
 		Integer userId =  userService.register(userRegisterRequest);
 		
@@ -30,5 +34,13 @@ public class UserController {
 		
 	}
 	
+	@PostMapping("users/login")
+	public ResponseEntity<User> login(@RequestBody @Valid UserLoginRequest userLoginRequest){
+		
+		User user = userService.login(userLoginRequest);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(user);
+		
+	}
 
 }

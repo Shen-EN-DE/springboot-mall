@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dao.UserDao;
@@ -33,6 +34,10 @@ public class UserServiceImpl implements UserService{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		
+		// MD5生成密碼
+		String hashPassword = DigestUtils.md5DigestAsHex(userRegisterRequest.getPassword().getBytes());
+		userRegisterRequest.setPassword(hashPassword);
+		
 		return userDao.createUser(userRegisterRequest);
 		
 	}
@@ -47,7 +52,10 @@ public class UserServiceImpl implements UserService{
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		
-		if (user.getPassword().equals(userLoginRequest.getPassword())) {
+		//md5生成密碼
+		String hashPassword = DigestUtils.md5DigestAsHex(userLoginRequest.getPassword().getBytes());
+		
+		if (user.getPassword().equals(hashPassword)) {
 			return user;
 		}else {
 			log.warn("the email {} is password incorrect", userLoginRequest.getEmail());

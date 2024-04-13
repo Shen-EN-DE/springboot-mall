@@ -1,4 +1,4 @@
-package com.example.demo.dao;
+package com.example.demo.dao.impl;
 
 import java.security.PublicKey;
 import java.security.spec.NamedParameterSpec;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.example.demo.constent.ProductCategory;
+import com.example.demo.dao.ProductDao;
 import com.example.demo.dto.ProductQueryParams;
 import com.example.demo.dto.ProductRequest;
 import com.example.demo.model.Product;

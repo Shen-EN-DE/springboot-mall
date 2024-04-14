@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.example.demo.dto.OrderQueryParams;
 import com.example.demo.model.Order;
 import com.example.demo.model.OrderItem;
 
@@ -17,5 +18,9 @@ public interface OrderDao {
 	Order getOrderById(Integer orderId);
 	
 	List<OrderItem> getOrderItemsByOrderId(Integer orderid); 
+	
+	Integer countOrder(OrderQueryParams orderQueryParams);
+	
+	List<Order> getOrders(OrderQueryParams orderQueryParams);
 	
 }

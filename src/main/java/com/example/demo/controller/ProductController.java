@@ -33,7 +33,7 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 	
-	@GetMapping("/products")
+	@GetMapping("/public/products")
 	public ResponseEntity<Page<Product>> getProduct(
 			@RequestParam(required = false) ProductCategory category,
 			@RequestParam(required = false) String search,
@@ -70,7 +70,7 @@ public class ProductController {
 	}
 	
 	
-	@GetMapping("/products/{productId}")
+	@GetMapping("/public/products/{productId}")
 	public ResponseEntity<Product> getProduct(@PathVariable Integer productId){
 		Product product = productService.getProductById(productId);
 		
@@ -81,7 +81,7 @@ public class ProductController {
 		}	
 	}
 	
-	@PostMapping("/products")
+	@PostMapping("/admin/products")
 	public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequest productRequest) {
 		
 		Integer productId = productService.createProduct(productRequest);
@@ -93,7 +93,7 @@ public class ProductController {
 	}
 	
 	
-	@PutMapping("/products/{productId}")
+	@PutMapping("/admin/products/{productId}")
 	public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
 												 @RequestBody @Valid ProductRequest productRequest) {
 		
@@ -112,7 +112,7 @@ public class ProductController {
 		return ResponseEntity.status(HttpStatus.OK).body(updateProduct);
 	}
 	
-	@DeleteMapping("/products/{productId}")
+	@DeleteMapping("/admin/products/{productId}")
 	public ResponseEntity<Product> deleteProduct(@PathVariable Integer productId){
 		
 		productService.deleteProductById(productId);

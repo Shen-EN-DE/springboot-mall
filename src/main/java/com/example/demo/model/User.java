@@ -1,7 +1,11 @@
-package com.example.demo.model;
+	package com.example.demo.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+
+import com.example.demo.constent.UserAuthority;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,8 +22,16 @@ public class User {
 	private Date createdDate;
 	private Date lastModifiedDate;
 	
+	private UserAuthority authority;
 	
 	
+	
+	public UserAuthority getAuthority() {
+		return authority;
+	}
+	public void setAuthority(UserAuthority authority) {
+		this.authority = authority;
+	}
 	public Integer getUserId() {
 		return userId;
 	}

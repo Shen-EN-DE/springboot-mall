@@ -14,6 +14,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.SqlArrayValue;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.constent.UserAuthority;
 import com.example.demo.dao.UserDao;
 import com.example.demo.dto.UserRegisterRequest;
 import com.example.demo.model.User;
@@ -31,8 +32,8 @@ public class UserDaoImpl implements UserDao{
 	
 	@Override
 	public Integer createUser(UserRegisterRequest userRegisterRequest) {
-		String sql = "INSERT INTO user(email, password, created_date, last_modified_date)"
-				+ " VALUE (:email, :password, :createdDate, :lastMadifiedDate)";
+		String sql = "INSERT INTO user(email, password, created_date, last_modified_date, roles)"
+				+ " VALUE (:email, :password, :createdDate, :lastMadifiedDate, :roles)";
 		
 		Map<String , Object> map = new HashMap<>();
 		map.put("email", userRegisterRequest.getEmail());
@@ -41,6 +42,7 @@ public class UserDaoImpl implements UserDao{
 		Date now = new Date();
 		map.put("createdDate", now);
 		map.put("lastMadifiedDate", now);
+		map.put("roles", UserAuthority.USER.toString());
 		
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		
@@ -57,7 +59,7 @@ public class UserDaoImpl implements UserDao{
 	@Override
 	public User getUserById(Integer userId) {
 		
-		String sql =  "SELECT user_id, email, password, created_date, last_modified_date"
+		String sql =  "SELECT user_id, email, password, created_date, last_modified_date, roles"
 					+ " FROM user"
 					+ " WHERE user_id = :userId";
 		
@@ -77,7 +79,7 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	public User getUserByEmail(String email) {
-		String sql = "SELECT user_id, email, password, created_date, last_modified_date"
+		String sql = "SELECT user_id, email, password, created_date, last_modified_date, roles"
 					+ " FROM user"
 					+ " WHERE email = :email";
 		

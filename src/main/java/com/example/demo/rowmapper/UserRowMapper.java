@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
+import com.example.demo.constent.UserAuthority;
 import com.example.demo.model.User;
 
 public class UserRowMapper implements RowMapper<User>{
@@ -19,6 +20,11 @@ public class UserRowMapper implements RowMapper<User>{
 		user.setCreatedDate(rs.getTimestamp("created_date"));
 		user.setLastModifiedDate(rs.getTimestamp("last_modified_date"));;
 		user.setUserId(rs.getInt("user_id"));
+		
+		String authorityString = rs.getString("roles");
+		if (authorityString != null) {
+			user.setAuthority(UserAuthority.valueOf(authorityString));
+		}
 		
 		
 		return user;

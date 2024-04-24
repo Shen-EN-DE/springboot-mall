@@ -30,6 +30,8 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 	
+	
+	//只有自己userid才能看自己的order
 	@GetMapping("/users/{userId}/orders")
 	public ResponseEntity<Page<Order>> getOrders(
 			@PathVariable Integer userId,

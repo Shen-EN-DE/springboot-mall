@@ -9,8 +9,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+<<<<<<< HEAD
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+=======
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.ErrorResponseException;
+>>>>>>> 5bc9e6873c2ae4fb5b8bf3df83b438ae145219ee
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dao.OrderDao;
@@ -30,7 +37,11 @@ import com.mysql.cj.log.Log;
 @Component
 public class OrderServiceImpl implements OrderService{
 	
+<<<<<<< HEAD
 	private final static Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
+=======
+	private Logger log = LoggerFactory.getLogger(OrderService.class);
+>>>>>>> 5bc9e6873c2ae4fb5b8bf3df83b438ae145219ee
 	
 	@Autowired
 	private OrderDao orderDao;
@@ -82,10 +93,18 @@ public class OrderServiceImpl implements OrderService{
 	@Transactional
 	@Override
 	public Integer createOrder(Integer userId, CreateOrderRequest createOrderRequest) {
+<<<<<<< HEAD
 		User user =  userDao.getUserById(userId);
 		
 		if (user == null) {
 			log.warn(" the userId {} is not exists", userId);
+=======
+		
+		User user = userDao.getUserById(userId);
+		
+		if (user == null) {
+			log.warn("UserId {} is not exist", userId);
+>>>>>>> 5bc9e6873c2ae4fb5b8bf3df83b438ae145219ee
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		
@@ -97,16 +116,30 @@ public class OrderServiceImpl implements OrderService{
 			Product product = productDao.getProductById(buyItem.getProductId());
 			
 			if (product == null) {
+<<<<<<< HEAD
 				log.warn("product {} isn't exist", buyItem.getProductId());
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 			}else if (product.getstock() < buyItem.getQuantity()){
 				log.warn("product {} is not in stock, not buy. remaining stock {}, want to buy {}",
+=======
+				log.warn("product {} is not exist", buyItem.getProductId());
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+			}else if(product.getstock() < buyItem.getQuantity()) {
+				log.warn("product {} stock 不夠，無法購買，剩餘庫存{}，欲購買數量{}",
+>>>>>>> 5bc9e6873c2ae4fb5b8bf3df83b438ae145219ee
 						buyItem.getProductId(), product.getstock(), buyItem.getQuantity());
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 			}
 			
+<<<<<<< HEAD
 			productDao.updateStock(product.getProductId() ,product.getstock() - buyItem.getQuantity());
 				
+=======
+			productDao.updateStock(buyItem.getProductId(), product.getstock() - buyItem.getQuantity());
+			
+			
+			
+>>>>>>> 5bc9e6873c2ae4fb5b8bf3df83b438ae145219ee
 			//計算總價錢
 			int amount = buyItem.getQuantity() * product.getPrice();
 			totalAmount = totalAmount + amount;

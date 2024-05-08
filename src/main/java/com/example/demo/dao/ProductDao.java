@@ -23,7 +23,12 @@ public interface ProductDao {
 	void updateProductWithExistingImage(Integer productId, Product product);
 	
 	void deleteProductById(Integer productId);
+<<<<<<< HEAD
 
 	void updateStock(Integer productId, Integer stock);
+=======
+	
+	void updateStock (Integer productId, Integer stock);
+>>>>>>> 5bc9e6873c2ae4fb5b8bf3df83b438ae145219ee
 
 }

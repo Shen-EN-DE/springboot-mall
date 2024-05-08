@@ -19,6 +19,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+// 使用OncePerRequestFilter確保對於每次的請求只需要驗證一次JWT即可
 public class AuthTokenFilter extends OncePerRequestFilter{
 	
 	@Autowired
@@ -41,14 +42,15 @@ public class AuthTokenFilter extends OncePerRequestFilter{
 				AppUserDetails userDetails = (AppUserDetails) userDetailServiceImpl.loadUserByUsername(emall);
 				var authentication = 
 						new UsernamePasswordAuthenticationToken(userDetails,  null, userDetails.getAuthorities());
+				//這一行設置了請求的細節，如 IP 地址和 session ID，這有助於進一步的安全決策或日誌記錄。
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}
 			
 		} catch (Exception e) {
-			log.error("Cannot set uesr authentication: {} ", e.getMessage());
+			log.error("Cannot set user authentication: {} ", e.getMessage());
 		}
-		
+		//確保請求可以繼續到達應用的其他部分或其他過濾器。
 		filterChain.doFilter(request, response);
 	}
 	

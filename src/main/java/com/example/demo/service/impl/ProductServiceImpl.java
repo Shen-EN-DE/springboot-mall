@@ -1,6 +1,12 @@
 package com.example.demo.service.impl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
+import java.util.Locale.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,7 +47,9 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public Integer createProduct(ProductRequest productRequest) {
 		
-		return productDao.createProduct(productRequest);
+		Integer productId =  productDao.createProduct(productRequest);
+		
+		return productId;
 	}
 	
 
@@ -52,12 +60,32 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
+	public void updateProductWithExistingImage(Integer productId, String productName, 
+			ProductCategory category, String oldImageUrl, Integer price,
+			Integer stock, String description) {
+		
+		Product product = productDao.getProductById(productId);
+		
+		product.setProductName(productName);
+		product.setCategery(category);
+		product.setImageUrl(oldImageUrl);
+		product.setPrice(price);
+		product.setstock(stock);
+		product.setDescription(description);
+		
+		productDao.updateProductWithExistingImage(productId, product);
+		
+		
+		
+	}
+	
+	
+
+	@Override
 	public void deleteProductById(Integer productId) {
 		
 		productDao.deleteProductById(productId);
 		
 	}
-	
-	
 	
 }

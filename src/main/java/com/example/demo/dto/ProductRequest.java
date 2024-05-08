@@ -2,6 +2,8 @@ package com.example.demo.dto;
 
 import java.util.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.demo.constent.ProductCategory;
 
 import jakarta.validation.constraints.NotNull;
@@ -14,8 +16,8 @@ public class ProductRequest {
 	@NotNull
 	private ProductCategory category;
 	
-	@NotNull
-	private String imageUrl;
+//	@NotNull
+	private MultipartFile imageUrl;
 	
 	@NotNull
 	private Integer price;
@@ -26,6 +28,16 @@ public class ProductRequest {
 	private String description;
 	
 	
+	public ProductRequest(String productName, ProductCategory category, MultipartFile imageUrl, Integer price,
+			Integer stock, String description) {
+		
+		this.productName = productName;
+		this.category = category;
+		this.imageUrl = imageUrl;
+		this.price = price;
+		this.stock = stock;
+		this.description = description;
+	}
 	public String getProductName() {
 		return productName;
 	}
@@ -38,10 +50,10 @@ public class ProductRequest {
 	public void setcategory(ProductCategory category) {
 		this.category = category;
 	}
-	public String getImageUrl() {
+	public MultipartFile getImageUrl() {
 		return imageUrl;
 	}
-	public void setImageUrl(String imageUrl) {
+	public void setImageUrl(MultipartFile imageUrl) {
 		this.imageUrl = imageUrl;
 	}
 	public Integer getPrice() {

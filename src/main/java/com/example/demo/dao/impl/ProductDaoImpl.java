@@ -1,7 +1,9 @@
 package com.example.demo.dao.impl;
 
+import java.io.IOException;
 import java.security.PublicKey;
 import java.security.spec.NamedParameterSpec;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -102,23 +104,32 @@ public class ProductDaoImpl implements ProductDao {
 		Map<String, Object> map = new HashMap<>();
 		map.put("productName", productRequest.getProductName());
 		map.put("category", productRequest.getcategory().toString());
-		map.put("imageUrl", productRequest.getImageUrl());
-		map.put("price", productRequest.getPrice());
-		map.put("stock", productRequest.getStock());
-		map.put("description", productRequest.getDescription());
 		
-		Date now = new Date();
-		map.put("createdDate", now);
-		map.put("lastModifiedDate", now);
-		
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		
-		namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
-		
-		int productId = keyHolder.getKey().intValue();
-		
-		return productId;
-		
+		byte[] imageBytes = null;
+		try {
+			imageBytes = productRequest.getImageUrl().getBytes();
+			String base64Image = Base64.getEncoder().encodeToString(imageBytes); 
+			
+			map.put("imageUrl", base64Image);
+			map.put("price", productRequest.getPrice());
+			map.put("stock", productRequest.getStock());
+			map.put("description", productRequest.getDescription());
+			
+			Date now = new Date();
+			map.put("createdDate", now);
+			map.put("lastModifiedDate", now);
+			
+			KeyHolder keyHolder = new GeneratedKeyHolder();
+			
+			namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
+			
+			int productId = keyHolder.getKey().intValue();
+			
+			return productId;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
@@ -126,16 +137,50 @@ public class ProductDaoImpl implements ProductDao {
 		String sql = "UPDATE product SET product_name = :productName, category = :category, image_url = :imageUrl"
 				+ ", price = :price, stock = :stock, description = :description, last_modified_date = :lastModifiedDate"
 				+ " WHERE product_id = :productId ";
-		
+
+		byte[] imageBytes = null;
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("productId", productId);
+			
+			map.put("productName", productRequest.getProductName());
+			map.put("category", productRequest.getcategory().toString());
+			
+			imageBytes = productRequest.getImageUrl().getBytes();
+			String base64Images = Base64.getEncoder().encodeToString(imageBytes);
+			
+			map.put("imageUrl", base64Images);
+			map.put("price", productRequest.getPrice());
+			map.put("stock", productRequest.getStock());
+			map.put("description", productRequest.getDescription());
+			
+			Date now = new Date();
+			map.put("lastModifiedDate", now);
+			
+			namedParameterJdbcTemplate.update(sql, map);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	@Override
+	public void updateProductWithExistingImage(Integer productId, Product product) {
+		String sql = "UPDATE product SET product_name = :productName, category = :category, image_url = :imageUrl"
+				+ ", price = :price, stock = :stock, description = :description, last_modified_date = :lastModifiedDate"
+				+ " WHERE product_id = :productId ";
+
+		byte[] imageBytes = null;
 		Map<String, Object> map = new HashMap<>();
 		map.put("productId", productId);
 		
-		map.put("productName", productRequest.getProductName());
-		map.put("category", productRequest.getcategory().toString());
-		map.put("imageUrl", productRequest.getImageUrl());
-		map.put("price", productRequest.getPrice());
-		map.put("stock", productRequest.getStock());
-		map.put("description", productRequest.getDescription());
+		map.put("productName", product.getProductName());
+		map.put("category", product.getCategory().toString());
+		
+		map.put("imageUrl", product.getImageUrl());
+		map.put("price", product.getPrice());
+		map.put("stock", product.getstock());
+		map.put("description", product.getDescription());
 		
 		Date now = new Date();
 		map.put("lastModifiedDate", now);
@@ -143,6 +188,8 @@ public class ProductDaoImpl implements ProductDao {
 		namedParameterJdbcTemplate.update(sql, map);
 		
 	}
+
+	
 	
 	
 	@Override

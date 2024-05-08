@@ -20,6 +20,7 @@ public interface ProductDao {
 	Integer createProduct(ProductRequest productRequest);
 	
 	void updateProduct(Integer productId, ProductRequest productRequest);
+	void updateProductWithExistingImage(Integer productId, Product product);
 	
 	void deleteProductById(Integer productId);
 

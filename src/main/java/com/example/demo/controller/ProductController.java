@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.constent.ProductCategory;
 import com.example.demo.dto.ProductQueryParams;
@@ -41,7 +44,7 @@ public class ProductController {
 			@RequestParam(defaultValue = "created_date") String orderBy,
 			@RequestParam(defaultValue = "desc") String sort,
 			
-			@RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit, // 使用max和min時要去上面使用@Validated
+			@RequestParam(defaultValue = "100") @Max(1000) @Min(0) Integer limit, // 使用max和min時要去上面使用@Validated
 			@RequestParam(defaultValue = "0") @Min(0) Integer offset //從第幾筆開始抓取
 	){
 		ProductQueryParams productQueryParams = new ProductQueryParams();
@@ -81,8 +84,27 @@ public class ProductController {
 		}	
 	}
 	
+	@GetMapping("/public/products/types")
+	public ResponseEntity<List<ProductCategory>> getProductTypes(){
+		List<ProductCategory> productTypes = Arrays.asList(ProductCategory.values());
+		
+		if(!productTypes.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK).body(productTypes);
+		}else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		}
+	}
+	
 	@PostMapping("/admin/products")
-	public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequest productRequest) {
+	public ResponseEntity<Product> createProduct(
+	        @RequestParam("productName") String productName,
+	        @RequestParam("category") ProductCategory category,
+	        @RequestParam(value = "imageUrl", required = false) MultipartFile imageUrl,
+	        @RequestParam("price") Integer price,
+	        @RequestParam("stock") Integer stock,
+	        @RequestParam(value= "description", required = false) String description) {
+		
+		ProductRequest productRequest = new ProductRequest(productName, category, imageUrl, price, stock, description);
 		
 		Integer productId = productService.createProduct(productRequest);
 		
@@ -95,17 +117,31 @@ public class ProductController {
 	
 	@PutMapping("/admin/products/{productId}")
 	public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
-												 @RequestBody @Valid ProductRequest productRequest) {
+									 	 		 @RequestParam("productName") String productName,
+										         @RequestParam("category") ProductCategory category,
+										         @RequestParam(value = "imageUrl", required = false) MultipartFile imageUrl,
+										         @RequestParam("price") Integer price,
+										         @RequestParam("stock") Integer stock,
+										         @RequestParam(value = "description", required = false) String description) {
 		
-		// check product is exist?
-		Product product = productService.getProductById(productId);
+		//check if product
+		Product existProduct = productService.getProductById(productId); 
 		
-		if(product == null) {
+		if(existProduct == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}					
+		}	
 		
-		// update product data
-		productService.updateProduct(productId, productRequest);
+
+		if (imageUrl == null || imageUrl.isEmpty()) {
+			System.out.println(existProduct.getImageUrl());
+			productService.updateProductWithExistingImage(productId, productName, category, existProduct.getImageUrl(), price, stock, description);
+			
+		} else {
+			ProductRequest productRequest = new ProductRequest(productName, category, imageUrl, price, stock, description);
+			// update product data
+			productService.updateProduct(productId, productRequest);
+		}
+
 		
 		Product updateProduct = productService.getProductById(productId);
 		
